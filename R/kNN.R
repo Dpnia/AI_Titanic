@@ -28,6 +28,10 @@ test_data$Gender <- ifelse(test_data$Sex=='male',1,0)
 train_data$Fare[is.na(train_data$Fare)] <- median(train_data$Fare, na.rm=TRUE)
 test_data$Fare[is.na(test_data$Fare)] <- median(test_data$Fare, na.rm=TRUE)
 
-library(class)
-knn(train_data, test_data, cl=train_data$Survived, k=1)
-  
+library(kknn)
+dataknn <- kknn(Survived~ Pclass + Gender + Age + SibSp + Parch + Fare + Embarked, train_data, test_data, k=2,distance=1 )
+fit <- fitted(dataknn)
+
+k_nn <- data.frame(test_data$PassengerId, fit)
+names(k_nn) <- c("PassengerID", "Survived")
+write.csv(k_nn, "k_nn.csv", row.names=FALSE)
